@@ -5,6 +5,7 @@ import {
   Direction,
   DIRECTIONS,
   DirectionsEnum,
+  HexColor,
   INITIAL_NAMES,
 } from './constants'
 import { getRandomNumber } from './utils/get-random-number'
@@ -61,7 +62,9 @@ export const App = () => {
   const approvedNames = useRef<string[] | null>([])
 
   const onSwiping = (swipeEvent: SwipeEventData) => {
-    if (!card.current) return
+    if (!card.current) {
+      return
+    }
 
     const currentDir = swipeEvent.dir as Direction
 
@@ -75,7 +78,9 @@ export const App = () => {
   }
 
   const onSwiped = (swipeEvent: SwipeEventData) => {
-    if (!card.current) return
+    if (!card.current) {
+      return
+    }
 
     const direction = swipeEvent.dir as Direction
 
@@ -93,12 +98,11 @@ export const App = () => {
     }, 300)
   }
 
-  const handleAction = (action: string) => {
-    console.log(`You ${action}: ${currentName}`)
-
+  const handleAction = (action: Direction) => {
     // If we swipe up, do nothing
     if (action === DirectionsEnum.Up) {
       setCurrentName(names[getRandomNumber(names.length)])
+      recolorCard('#87CEEB')
       return
     }
 
@@ -107,6 +111,11 @@ export const App = () => {
     // Accept name
     if (action === DirectionsEnum.Right) {
       approvedNames.current?.push(currentName)
+      recolorCard('#98FB98')
+    }
+
+    if (action === DirectionsEnum.Left) {
+      recolorCard('#FFB6C1')
     }
 
     if (remainingNames.length > 0) {
@@ -115,6 +124,20 @@ export const App = () => {
     } else {
       setCurrentName('No more names!')
     }
+  }
+
+  const recolorCard = (color: HexColor) => {
+    if (!card.current) {
+      return
+    }
+
+    card.current.style.backgroundColor = color
+
+    setTimeout(() => {
+      if (card.current) {
+        card.current.style.backgroundColor = '#ffffff'
+      }
+    }, 300)
   }
 
   const handlers = useSwipeable({
