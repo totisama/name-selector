@@ -68,6 +68,11 @@ export const App = () => {
 
     const currentDir = swipeEvent.dir as Direction
 
+    // limit swipe distance
+    if (swipeEvent.absX > 250 || swipeEvent.absY > 250) {
+      return
+    }
+
     if (currentDir === DirectionsEnum.Left) {
       card.current.style.transform = `translateX(-${swipeEvent.absX}px)`
     } else if (currentDir === DirectionsEnum.Right) {
