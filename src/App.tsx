@@ -64,31 +64,73 @@ const Button = styled.button<ButtonProps>`
   }
 `
 
+const InstructionsContainer = styled.div`
+  height: 40px; /* Fixed height matching the height of Instructions content */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const CardContainer = styled.div<{ flipped: boolean; transitioning: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 400px;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transition: transform ${({ transitioning }) => (transitioning ? '1s' : '0s')}
+    ease-in;
+
+  transform: ${({ flipped }) =>
+    flipped ? 'rotateY(180deg)' : 'rotateY(0deg)'};
+`
+
 export const App = () => {
   const [previewApprovedNames, setPreviewApprovedNames] = useState(false)
+  const [flipped, setFlipped] = useState(false)
+  const [transitioning, setTransitioning] = useState(false)
   const approvedNames = useRef<string[]>([])
+
+  const handleButtonClick = () => {
+    setFlipped(true)
+    setTransitioning(true)
+
+    setTimeout(() => {
+      setPreviewApprovedNames(!previewApprovedNames)
+    }, 700)
+
+    setTimeout(() => {
+      setFlipped(false)
+      setTransitioning(false)
+    }, 1000)
+  }
 
   return (
     <Container>
       <Title>Name Selector</Title>
-      {previewApprovedNames ? (
-        <NamesCard approvedNames={approvedNames.current} />
-      ) : (
-        <>
+      <CardContainer flipped={flipped} transitioning={transitioning}>
+        {previewApprovedNames ? (
+          <NamesCard approvedNames={approvedNames.current} />
+        ) : (
           <SwipeableCard
             initialNames={INITIAL_NAMES}
             approvedNames={approvedNames}
           />
+        )}
+      </CardContainer>
+      <InstructionsContainer>
+        {!previewApprovedNames && (
           <Instructions>
             Swipe <strong>Right</strong> to accept, <strong>Left</strong> to
             deny, and <strong>Up</strong> to postpone.
           </Instructions>
-        </>
-      )}
+        )}
+      </InstructionsContainer>
       <ButtonsContainer>
         <Button
           mode={previewApprovedNames ? 'secondary' : 'primary'}
-          onClick={() => setPreviewApprovedNames(!previewApprovedNames)}
+          onClick={handleButtonClick}
         >
           {previewApprovedNames ? 'Back to swiping' : 'View selected names'}
         </Button>
