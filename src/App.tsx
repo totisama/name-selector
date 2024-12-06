@@ -3,6 +3,7 @@ import { SwipeableCard } from './components/SwipeableCard'
 import { useRef, useState } from 'react'
 import { INITIAL_NAMES } from './constants'
 import { NamesCard } from './components/NamesCard'
+import { Instructions } from './components/Instructions'
 
 type ButtonProps = {
   mode: 'primary' | 'secondary'
@@ -24,17 +25,6 @@ const Title = styled.h1`
   color: #fff;
   font-weight: bold;
   margin: 0px;
-`
-
-const Instructions = styled.p`
-  margin: 0px;
-  font-size: 16px;
-  color: #e0e0e0;
-  text-align: center;
-
-  strong {
-    color: #ffffff;
-  }
 `
 
 const ButtonsContainer = styled.div`
@@ -62,13 +52,6 @@ const Button = styled.button<ButtonProps>`
     background-color: ${({ mode }) =>
       mode === 'primary' ? '#0056b3' : '#5a6268'};
   }
-`
-
-const InstructionsContainer = styled.div`
-  height: 40px; /* Fixed height matching the height of Instructions content */
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `
 
 const CardContainer = styled.div<{ flipped: boolean; transitioning: boolean }>`
@@ -119,14 +102,7 @@ export const App = () => {
           />
         )}
       </CardContainer>
-      <InstructionsContainer>
-        {!previewApprovedNames && (
-          <Instructions>
-            Swipe <strong>Right</strong> to accept, <strong>Left</strong> to
-            deny, and <strong>Up</strong> to postpone.
-          </Instructions>
-        )}
-      </InstructionsContainer>
+      <Instructions displaytext={!previewApprovedNames} />
       <ButtonsContainer>
         <Button
           mode={previewApprovedNames ? 'secondary' : 'primary'}
