@@ -67,3 +67,5 @@ export const DIRECTIONS = [
   DirectionsEnum.Right,
   DirectionsEnum.Up,
 ]
+
+export type HexColor = `#${string}`
