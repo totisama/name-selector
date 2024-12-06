@@ -22,8 +22,9 @@ const Container = styled.div`
 
 const Title = styled.h1`
   margin-bottom: 20px;
-  font-size: 36px;
+  font-size: 52px;
   color: #fff;
+  font-weight: bold;
 `
 
 const Card = styled.div`
@@ -35,7 +36,7 @@ const Card = styled.div`
   background-color: #ffffff;
   color: #242424;
   border-radius: 10px;
-  font-size: 24px;
+  font-size: 40px;
   font-weight: bold;
   text-align: center;
   user-select: none;
