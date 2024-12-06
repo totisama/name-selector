@@ -27,13 +27,6 @@ const Title = styled.h1`
   margin: 0px;
 `
 
-const ButtonsContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-`
-
 const Button = styled.button<ButtonProps>`
   border: none;
   border-radius: 8px;
@@ -103,14 +96,12 @@ export const App = () => {
         )}
       </CardContainer>
       <Instructions displaytext={!previewApprovedNames} />
-      <ButtonsContainer>
-        <Button
-          mode={previewApprovedNames ? 'secondary' : 'primary'}
-          onClick={handleButtonClick}
-        >
-          {previewApprovedNames ? 'Back to swiping' : 'View selected names'}
-        </Button>
-      </ButtonsContainer>
+      <Button
+        mode={previewApprovedNames ? 'secondary' : 'primary'}
+        onClick={handleButtonClick}
+      >
+        {previewApprovedNames ? 'Back to swiping' : 'View selected names'}
+      </Button>
     </Container>
   )
 }
