@@ -1,7 +1,12 @@
 import styled from 'styled-components'
 import { SwipeableCard } from './components/SwipeableCard'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { INITIAL_NAMES } from './constants'
+import { NamesCard } from './components/NamesCard'
+
+type ButtonProps = {
+  mode: 'primary' | 'secondary'
+}
 
 const Container = styled.div`
   display: flex;
@@ -11,17 +16,18 @@ const Container = styled.div`
   height: 100vh;
   width: 100vw;
   background-color: #242424;
+  gap: 20px;
 `
 
 const Title = styled.h1`
-  margin-bottom: 20px;
   font-size: 52px;
   color: #fff;
   font-weight: bold;
+  margin: 0px;
 `
 
 const Instructions = styled.p`
-  margin-top: 20px;
+  margin: 0px;
   font-size: 16px;
   color: #e0e0e0;
   text-align: center;
@@ -31,20 +37,62 @@ const Instructions = styled.p`
   }
 `
 
+const ButtonsContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+`
+
+const Button = styled.button<ButtonProps>`
+  border: none;
+  border-radius: 8px;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  color: #fff;
+
+  background-color: ${({ mode }) =>
+    mode === 'primary' ? '#007bff' : '#6c757d'};
+  border: ${({ mode }) => (mode === 'primary' ? 'none' : '1px solid #000000')};
+
+  &:hover {
+    background-color: ${({ mode }) =>
+      mode === 'primary' ? '#0056b3' : '#5a6268'};
+  }
+`
+
 export const App = () => {
-  const approvedNames = useRef<string[] | null>([])
+  const [previewApprovedNames, setPreviewApprovedNames] = useState(false)
+  const approvedNames = useRef<string[]>([])
 
   return (
     <Container>
       <Title>Name Selector</Title>
-      <SwipeableCard
-        initialNames={INITIAL_NAMES}
-        approvedNames={approvedNames}
-      />
-      <Instructions>
-        Swipe <strong>Right</strong> to accept, <strong>Left</strong> to deny,
-        and <strong>Up</strong> to postpone.
-      </Instructions>
+      {previewApprovedNames ? (
+        <NamesCard approvedNames={approvedNames.current} />
+      ) : (
+        <>
+          <SwipeableCard
+            initialNames={INITIAL_NAMES}
+            approvedNames={approvedNames}
+          />
+          <Instructions>
+            Swipe <strong>Right</strong> to accept, <strong>Left</strong> to
+            deny, and <strong>Up</strong> to postpone.
+          </Instructions>
+        </>
+      )}
+      <ButtonsContainer>
+        <Button
+          mode={previewApprovedNames ? 'secondary' : 'primary'}
+          onClick={() => setPreviewApprovedNames(!previewApprovedNames)}
+        >
+          {previewApprovedNames ? 'Back to swiping' : 'View selected names'}
+        </Button>
+      </ButtonsContainer>
     </Container>
   )
 }
