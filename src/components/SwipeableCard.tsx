@@ -3,6 +3,7 @@ import { SwipeEventData, useSwipeable } from 'react-swipeable'
 import styled from 'styled-components'
 import { Direction, DIRECTIONS, DirectionsEnum, HexColor } from '../constants'
 import { getRandomNumber } from '../utils/get-random-number'
+import { setToLocalStorage } from '../lib/localStorage'
 
 export const Card = styled.div`
   display: flex;
@@ -25,7 +26,7 @@ export const SwipeableCard = ({
   approvedNames,
 }: {
   initialNames: string[]
-  approvedNames: MutableRefObject<string[] | null>
+  approvedNames: MutableRefObject<string[]>
 }) => {
   const [names, setNames] = useState(initialNames)
   const [currentName, setCurrentName] = useState(
@@ -84,6 +85,7 @@ export const SwipeableCard = ({
     // Accept name
     if (action === DirectionsEnum.Right) {
       approvedNames.current?.push(currentName)
+      setToLocalStorage('approvedNames', approvedNames.current)
       recolorCard('#98FB98')
     }
 
@@ -91,13 +93,13 @@ export const SwipeableCard = ({
       recolorCard('#FFB6C1')
     }
 
-    console.log({ remainingNames, approvedNames: approvedNames.current })
-
     if (remainingNames.length > 0) {
       setCurrentName(remainingNames[getRandomNumber(remainingNames.length)])
       setNames(remainingNames)
+      setToLocalStorage('initialNames', remainingNames)
     } else {
       setCurrentName('No more names!')
+      setNames(remainingNames)
       setNames([])
     }
   }

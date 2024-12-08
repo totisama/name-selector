@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 import { SwipeableCard } from './components/SwipeableCard'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { INITIAL_NAMES } from './constants'
 import { NamesCard } from './components/NamesCard'
 import { Instructions } from './components/Instructions'
-
+import { getFromLocalStorage, removeFromLocalStorage } from './lib/localStorage'
 type ButtonProps = {
   mode: 'primary' | 'secondary'
 }
@@ -74,6 +74,7 @@ export const App = () => {
   const [previewApprovedNames, setPreviewApprovedNames] = useState(false)
   const [rotation, setRotation] = useState(0)
   const approvedNames = useRef<string[]>([])
+  const initialNames = useRef<string[]>(INITIAL_NAMES)
 
   const handleButtonClick = () => {
     setRotation((prevRotation) => prevRotation + 180)
@@ -82,6 +83,25 @@ export const App = () => {
       setPreviewApprovedNames(!previewApprovedNames)
     }, 500)
   }
+
+  const handleDeleteAllNames = () => {
+    approvedNames.current = []
+    initialNames.current = INITIAL_NAMES
+    removeFromLocalStorage('approvedNames')
+    removeFromLocalStorage('initialNames')
+  }
+
+  useEffect(() => {
+    const storedApprovedNames = getFromLocalStorage('approvedNames')
+    if (storedApprovedNames) {
+      approvedNames.current = storedApprovedNames
+    }
+
+    const storedInitialNames = getFromLocalStorage('initialNames')
+    if (storedInitialNames) {
+      initialNames.current = storedInitialNames
+    }
+  }, [])
 
   return (
     <Container>
@@ -95,7 +115,7 @@ export const App = () => {
             />
           </CardFace>
           <CardFace $face="back">
-            <NamesCard approvedNames={approvedNames.current} />
+            <NamesCard approvedNames={approvedNames} />
           </CardFace>
         </Card>
       </CardContainer>
