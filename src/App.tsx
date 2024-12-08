@@ -52,20 +52,22 @@ const CardContainer = styled.div`
   height: 400px;
 `
 
-const Card = styled.div<{ rotation: number }>`
+const Card = styled.div<{ $rotation: number }>`
   width: 100%;
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
-  transform: rotateY(${({ rotation }) => rotation}deg);
+  transform: rotateY(${({ $rotation }) => $rotation}deg);
   transition: transform 1s ease-in;
 `
 
-const CardFace = styled.div<{ front?: boolean }>`
+const CardFace = styled.div<{ $face: 'front' | 'back' }>`
   position: absolute;
   width: 100%;
   height: 100%;
-  transform: ${({ front }) => (front ? 'rotateY(0deg)' : 'rotateY(180deg)')};
+  backface-visibility: hidden;
+  transform: ${({ $face }) =>
+    $face === 'front' ? 'rotateY(0deg)' : 'rotateY(180deg)'};
 `
 
 export const App = () => {
@@ -85,14 +87,14 @@ export const App = () => {
     <Container>
       <Title>Name Selector</Title>
       <CardContainer>
-        <Card rotation={rotation}>
-          <CardFace front>
+        <Card $rotation={rotation}>
+          <CardFace $face="front">
             <SwipeableCard
               initialNames={INITIAL_NAMES}
               approvedNames={approvedNames}
             />
           </CardFace>
-          <CardFace>
+          <CardFace $face="back">
             <NamesCard approvedNames={approvedNames.current} />
           </CardFace>
         </Card>
