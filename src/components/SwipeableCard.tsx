@@ -1,9 +1,31 @@
 import { useState, useRef, MutableRefObject } from 'react'
 import { SwipeEventData, useSwipeable } from 'react-swipeable'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { Direction, DIRECTIONS, DirectionsEnum, HexColor } from '../constants'
 import { getRandomNumber } from '../utils/get-random-number'
 import { setToLocalStorage } from '../lib/localStorage'
+
+const slideOutUp = keyframes`
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+`
+
+const slideInUp = keyframes`
+  0% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+`
 
 export const Card = styled.div<{ $interactable: boolean }>`
   display: flex;
@@ -37,6 +59,12 @@ export const Card = styled.div<{ $interactable: boolean }>`
   `}
 `
 
+const TextWrapper = styled.div<{ $isChanging: boolean }>`
+  display: inline-block;
+  animation: ${({ $isChanging }) => ($isChanging ? slideOutUp : slideInUp)} 0.5s
+    ease-out;
+`
+
 export const SwipeableCard = ({
   names,
   approvedNames,
@@ -48,6 +76,7 @@ export const SwipeableCard = ({
   const [currentName, setCurrentName] = useState(
     () => namesValue[getRandomNumber(namesValue.length)]
   )
+  const [isChanging, setIsChanging] = useState(false)
   const card = useRef<HTMLDivElement | null>(null)
 
   const onSwiping = (swipeEvent: SwipeEventData) => {
@@ -91,7 +120,9 @@ export const SwipeableCard = ({
   const handleAction = (action: Direction) => {
     // If we swipe up, do nothing
     if (action === DirectionsEnum.Up) {
-      setCurrentName(namesValue[getRandomNumber(namesValue.length)])
+      const nextName = namesValue[getRandomNumber(namesValue.length)]
+
+      changeName(nextName)
       recolorCard('#87CEEB')
       return
     }
@@ -110,14 +141,24 @@ export const SwipeableCard = ({
     }
 
     if (remainingNames.length > 0) {
-      setCurrentName(remainingNames[getRandomNumber(remainingNames.length)])
+      const nextName = remainingNames[getRandomNumber(remainingNames.length)]
       names.current = remainingNames
       setToLocalStorage('initialNames', remainingNames)
+      changeName(nextName)
     } else {
       setCurrentName('')
       names.current = []
       setToLocalStorage('initialNames', [])
     }
+  }
+
+  const changeName = (nextName: string) => {
+    setIsChanging(true)
+
+    setTimeout(() => {
+      setCurrentName(nextName)
+      setIsChanging(false)
+    }, 500)
   }
 
   const recolorCard = (color: HexColor) => {
@@ -143,7 +184,9 @@ export const SwipeableCard = ({
 
   return (
     <Card {...handlers} ref={card} $interactable={true}>
-      {names.current.length > 0 ? currentName : 'No more names!'}
+      <TextWrapper $isChanging={isChanging}>
+        {names.current.length > 0 ? currentName : 'No more names!'}
+      </TextWrapper>
     </Card>
   )
 }
