@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import { Card } from './SwipeableCard'
-import { MutableRefObject } from 'react'
 
 const NamesList = styled.ul`
   height: 400px;
@@ -19,20 +18,14 @@ const NameItem = styled.li`
   font-weight: bold;
 `
 
-export const NamesCard = ({
-  approvedNames,
-}: {
-  approvedNames: MutableRefObject<string[]>
-}) => {
-  const approvedNamesArray = approvedNames.current
-
+export const NamesCard = ({ approvedNames }: { approvedNames: string[] }) => {
   return (
     <Card>
-      {approvedNamesArray.length === 0 ? (
+      {approvedNames.length === 0 ? (
         <p>No names approved yet</p>
       ) : (
         <NamesList>
-          {approvedNamesArray.map((name) => (
+          {approvedNames.map((name) => (
             <NameItem key={name}>{name}</NameItem>
           ))}
         </NamesList>

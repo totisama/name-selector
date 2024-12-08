@@ -93,7 +93,7 @@ export const App = () => {
             />
           </CardFace>
           <CardFace $face="back">
-            <NamesCard approvedNames={approvedNames} />
+            <NamesCard approvedNames={approvedNames.current} />
           </CardFace>
         </Card>
       </CardContainer>
