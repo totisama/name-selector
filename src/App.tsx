@@ -5,9 +5,7 @@ import { INITIAL_NAMES } from './constants'
 import { NamesCard } from './components/NamesCard'
 import { Instructions } from './components/Instructions'
 import { getFromLocalStorage, removeFromLocalStorage } from './lib/localStorage'
-type ButtonProps = {
-  mode: 'primary' | 'secondary'
-}
+import { Button } from './components/Button'
 
 const Container = styled.div`
   display: flex;
@@ -25,26 +23,6 @@ const Title = styled.h1`
   color: #fff;
   font-weight: bold;
   margin: 0px;
-`
-
-const Button = styled.button<ButtonProps>`
-  border: none;
-  border-radius: 8px;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  color: #fff;
-
-  background-color: ${({ mode }) =>
-    mode === 'primary' ? '#007bff' : '#6c757d'};
-  border: ${({ mode }) => (mode === 'primary' ? 'none' : '1px solid #000000')};
-
-  &:hover {
-    background-color: ${({ mode }) =>
-      mode === 'primary' ? '#0056b3' : '#5a6268'};
-  }
 `
 
 const CardContainer = styled.div`
@@ -123,9 +101,13 @@ export const App = () => {
       <Button
         mode={previewApprovedNames ? 'secondary' : 'primary'}
         onClick={handleButtonClick}
-      >
-        {previewApprovedNames ? 'Back to swiping' : 'View selected names'}
-      </Button>
+        text={previewApprovedNames ? 'Back to swiping' : 'View selected names'}
+      />
+      <Button
+        text={'Restart selection'}
+        mode="delete"
+        onClick={handleDeleteAllNames}
+      />
     </Container>
   )
 }
