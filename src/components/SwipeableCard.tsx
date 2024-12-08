@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Direction, DIRECTIONS, DirectionsEnum, HexColor } from '../constants'
 import { getRandomNumber } from '../utils/get-random-number'
 
-const Card = styled.div`
+export const Card = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

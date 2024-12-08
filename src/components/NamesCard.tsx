@@ -1,20 +1,5 @@
 import styled from 'styled-components'
-
-const Card = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 300px;
-  height: 400px;
-  background-color: #ffffff;
-  color: #242424;
-  border-radius: 10px;
-  font-size: 40px;
-  font-weight: bold;
-  text-align: center;
-  user-select: none;
-  transition: transform 0.3s ease-in-out;
-`
+import { Card } from './SwipeableCard'
 
 const NamesList = styled.ul`
   height: 400px;
