@@ -70,6 +70,7 @@ export const App = () => {
     initialNames.current = INITIAL_NAMES
     removeFromLocalStorage('approvedNames')
     removeFromLocalStorage('initialNames')
+    window.location.reload()
   }
 
   return (
