@@ -78,10 +78,7 @@ export const App = () => {
       <CardContainer>
         <Card $rotation={rotation}>
           <CardFace $face="front">
-            <SwipeableCard
-              initialNames={initialNames.current}
-              approvedNames={approvedNames}
-            />
+            <SwipeableCard names={initialNames} approvedNames={approvedNames} />
           </CardFace>
           <CardFace $face="back">
             <NamesCard approvedNames={approvedNames.current} />

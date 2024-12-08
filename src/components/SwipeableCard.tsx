@@ -22,20 +22,20 @@ export const Card = styled.div`
 `
 
 export const SwipeableCard = ({
-  initialNames,
+  names,
   approvedNames,
 }: {
-  initialNames: string[]
+  names: MutableRefObject<string[]>
   approvedNames: MutableRefObject<string[]>
 }) => {
-  const [names, setNames] = useState(initialNames)
+  const namesValue = names.current
   const [currentName, setCurrentName] = useState(
-    () => initialNames[getRandomNumber(initialNames.length)]
+    () => namesValue[getRandomNumber(namesValue.length)]
   )
   const card = useRef<HTMLDivElement | null>(null)
 
   const onSwiping = (swipeEvent: SwipeEventData) => {
-    if (!card.current || names.length === 0) {
+    if (!card.current || namesValue.length === 0) {
       return
     }
 
@@ -56,7 +56,7 @@ export const SwipeableCard = ({
   }
 
   const onSwiped = (swipeEvent: SwipeEventData) => {
-    if (!card.current || names.length === 0) {
+    if (!card.current || namesValue.length === 0) {
       return
     }
 
@@ -75,12 +75,12 @@ export const SwipeableCard = ({
   const handleAction = (action: Direction) => {
     // If we swipe up, do nothing
     if (action === DirectionsEnum.Up) {
-      setCurrentName(names[getRandomNumber(names.length)])
+      setCurrentName(namesValue[getRandomNumber(namesValue.length)])
       recolorCard('#87CEEB')
       return
     }
 
-    const remainingNames = names.filter((name) => name !== currentName)
+    const remainingNames = namesValue.filter((name) => name !== currentName)
 
     // Accept name
     if (action === DirectionsEnum.Right) {
@@ -95,12 +95,12 @@ export const SwipeableCard = ({
 
     if (remainingNames.length > 0) {
       setCurrentName(remainingNames[getRandomNumber(remainingNames.length)])
-      setNames(remainingNames)
+      names.current = remainingNames
       setToLocalStorage('initialNames', remainingNames)
     } else {
-      setCurrentName('No more names!')
-      setNames(remainingNames)
-      setNames([])
+      setCurrentName('')
+      names.current = []
+      setToLocalStorage('initialNames', [])
     }
   }
 
@@ -127,7 +127,7 @@ export const SwipeableCard = ({
 
   return (
     <Card {...handlers} ref={card}>
-      {currentName}
+      {names.current.length > 0 ? currentName : 'No more names!'}
     </Card>
   )
 }
