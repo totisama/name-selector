@@ -34,8 +34,10 @@ const StyledButton = styled.button<ButtonProps>`
   transition: background-color 0.3s ease, color 0.3s ease;
   color: #fff;
   background-color: ${({ mode }) => buttonStyles[mode].backgroundColor};
+  transition: transform 0.3s ease;
 
   &:hover {
+    transform: scale(1.05);
     background-color: ${({ mode }) => buttonStyles[mode].hoverBackgroundColor};
   }
 `

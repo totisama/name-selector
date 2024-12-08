@@ -11,6 +11,13 @@ const NamesList = styled.ul`
   flex-direction: column;
   gap: 5px;
   overflow-y: scroll;
+
+  // Hide scrollbar
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `
 
 const NameItem = styled.li`
@@ -20,7 +27,7 @@ const NameItem = styled.li`
 
 export const NamesCard = ({ approvedNames }: { approvedNames: string[] }) => {
   return (
-    <Card>
+    <Card $interactable={false}>
       {approvedNames.length === 0 ? (
         <p>No names approved yet</p>
       ) : (

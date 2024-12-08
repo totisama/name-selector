@@ -5,7 +5,7 @@ import { Direction, DIRECTIONS, DirectionsEnum, HexColor } from '../constants'
 import { getRandomNumber } from '../utils/get-random-number'
 import { setToLocalStorage } from '../lib/localStorage'
 
-export const Card = styled.div`
+export const Card = styled.div<{ $interactable: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -19,6 +19,22 @@ export const Card = styled.div`
   text-align: center;
   user-select: none;
   transition: transform 0.3s ease-in-out;
+
+  ${({ $interactable }) =>
+    $interactable &&
+    `
+    position: relative;
+    cursor: grab;
+    touch-action: none;
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  `}
 `
 
 export const SwipeableCard = ({
@@ -126,7 +142,7 @@ export const SwipeableCard = ({
   })
 
   return (
-    <Card {...handlers} ref={card}>
+    <Card {...handlers} ref={card} $interactable={true}>
       {names.current.length > 0 ? currentName : 'No more names!'}
     </Card>
   )
