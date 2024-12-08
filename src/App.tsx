@@ -47,53 +47,55 @@ const Button = styled.button<ButtonProps>`
   }
 `
 
-const CardContainer = styled.div<{ flipped: boolean; transitioning: boolean }>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+const CardContainer = styled.div`
   width: 300px;
   height: 400px;
-  perspective: 1000px;
-  transform-style: preserve-3d;
-  transition: transform ${({ transitioning }) => (transitioning ? '1s' : '0s')}
-    ease-in;
+`
 
-  transform: ${({ flipped }) =>
-    flipped ? 'rotateY(180deg)' : 'rotateY(0deg)'};
+const Card = styled.div<{ rotation: number }>`
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateY(${({ rotation }) => rotation}deg);
+  transition: transform 1s ease-in;
+`
+
+const CardFace = styled.div<{ front?: boolean }>`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform: ${({ front }) => (front ? 'rotateY(0deg)' : 'rotateY(180deg)')};
 `
 
 export const App = () => {
   const [previewApprovedNames, setPreviewApprovedNames] = useState(false)
-  const [flipped, setFlipped] = useState(false)
-  const [transitioning, setTransitioning] = useState(false)
+  const [rotation, setRotation] = useState(0)
   const approvedNames = useRef<string[]>([])
 
   const handleButtonClick = () => {
-    setFlipped(true)
-    setTransitioning(true)
+    setRotation((prevRotation) => prevRotation + 180)
 
     setTimeout(() => {
       setPreviewApprovedNames(!previewApprovedNames)
-    }, 700)
-
-    setTimeout(() => {
-      setFlipped(false)
-      setTransitioning(false)
-    }, 1000)
+    }, 500)
   }
 
   return (
     <Container>
       <Title>Name Selector</Title>
-      <CardContainer flipped={flipped} transitioning={transitioning}>
-        {previewApprovedNames ? (
-          <NamesCard approvedNames={approvedNames.current} />
-        ) : (
-          <SwipeableCard
-            initialNames={INITIAL_NAMES}
-            approvedNames={approvedNames}
-          />
-        )}
+      <CardContainer>
+        <Card rotation={rotation}>
+          <CardFace front>
+            <SwipeableCard
+              initialNames={INITIAL_NAMES}
+              approvedNames={approvedNames}
+            />
+          </CardFace>
+          <CardFace>
+            <NamesCard approvedNames={approvedNames.current} />
+          </CardFace>
+        </Card>
       </CardContainer>
       <Instructions displaytext={!previewApprovedNames} />
       <Button
